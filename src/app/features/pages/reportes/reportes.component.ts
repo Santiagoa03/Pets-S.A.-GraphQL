@@ -10,6 +10,9 @@ import { ExcelService } from '../../services/excel.service';
 import { ErrorService } from '../../services/errores.service';
 import { LoadingService } from '../../../shared/services/loading.service';
 import { NotificationService } from '../../services/notification.service';
+import { ClienteGraphqlService } from '../../services/graphQL/cliente.graphql.service';
+import { MascotaGraphqlService } from '../../services/graphQL/mascota.graphql.service';
+import { ReporteGraphqlService } from '../../services/graphQL/reporte.graphql.service';
 
 @Component({
   selector: 'app-reportes',
@@ -25,10 +28,10 @@ export class ReportesComponent implements OnInit {
   form: FormGroup;
 
   constructor(
-    private clienteService: ClienteService,
+    private clienteGraphql: ClienteGraphqlService,
     private fb: FormBuilder,
-    private mascotaService: MascotaService,
-    private reporteService: ReporteService,
+    private mascotaGraphqlService: MascotaGraphqlService,
+    private reporteGraphqlService: ReporteGraphqlService,
     private excelSercice: ExcelService,
     public readonly errorService: ErrorService,
     private notificacionService: NotificationService,
@@ -50,7 +53,7 @@ export class ReportesComponent implements OnInit {
   }
 
   consultarClientes(): void {
-    this.clienteService.consultarClientes().subscribe({
+    this.clienteGraphql.consultarClientes().subscribe({
       next: (response) => {
         this.listaClientes = response;
       },
@@ -61,7 +64,7 @@ export class ReportesComponent implements OnInit {
   }
 
   consultarMascotas(): void {
-    this.mascotaService.consultarMascotas().subscribe({
+    this.mascotaGraphqlService.consultarMascotas().subscribe({
       next: (response) => {
         this.listaMascotas = response;
       },
@@ -94,7 +97,7 @@ export class ReportesComponent implements OnInit {
 
     this.loadingService.show();
     if (tipoReporte === 'CLIENTE') {
-      this.reporteService
+      this.reporteGraphqlService
         .consultarReporteClientes(this.form.get('reporteCliente')?.value)
         .subscribe({
           next: (response) => {
@@ -124,7 +127,7 @@ export class ReportesComponent implements OnInit {
         })
         .add(() => this.loadingService.hide());
     } else {
-      this.reporteService
+      this.reporteGraphqlService
         .consultarReporteRecetas(Number(this.form.get('reporteMascota')?.value))
         .subscribe({
           next: (response) => {

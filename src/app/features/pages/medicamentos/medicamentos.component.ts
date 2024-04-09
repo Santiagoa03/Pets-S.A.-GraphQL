@@ -11,6 +11,7 @@ import { AgregarMedicamentoComponent } from '../../components/medicamentos/agreg
 import { DialogDataMedicamento } from '../../interfaces/dialog-data-medicamento.interface';
 import { NotificationService } from '../../services/notification.service';
 import { LoadingService } from '../../../shared/services/loading.service';
+import { MedicamentoGraphqlService } from '../../services/graphQL/medicamento.graphql.service';
 
 @Component({
   selector: 'app-medicamentos',
@@ -38,7 +39,7 @@ export class MedicamentosComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private medicamentoService: MedicamentoService,
+    private medicamentoGraphqlService: MedicamentoGraphqlService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService
   ) {}
@@ -64,7 +65,7 @@ export class MedicamentosComponent implements OnInit {
 
   consultarMedicamentos(): void {
     this.loadingService.show();
-    this.medicamentoService
+    this.medicamentoGraphqlService
       .consultarMedicamento()
       .subscribe({
         next: (response) => {
@@ -126,7 +127,7 @@ export class MedicamentosComponent implements OnInit {
     dialog.afterClosed().subscribe((res) => {
       if (res) {
         this.loadingService.show();
-        this.medicamentoService
+        this.medicamentoGraphqlService
           .eliminarMedicamento(medicamentoSeleccionado)
           .subscribe({
             next: () => {

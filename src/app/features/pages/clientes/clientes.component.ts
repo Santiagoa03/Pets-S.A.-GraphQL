@@ -3,17 +3,12 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Cliente } from '../../interfaces/cliente.interface';
-import { ClienteService } from '../../services/cliente.service';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AgregarClienteComponent } from '../../components/clientes/agregar-cliente/agregar-cliente.component';
 import { DialogSimpleComponent } from '../../../shared/components/dialog-simple/dialog-simple.component';
 import { DialogDataCliente } from '../../interfaces/dialog-data-cliente.interface';
-import {
-  MatSnackBar,
-  MatSnackBarHorizontalPosition,
-  MatSnackBarVerticalPosition,
-} from '@angular/material/snack-bar';
+
 import { NotificationService } from '../../services/notification.service';
 import { LoadingService } from '../../../shared/services/loading.service';
 import { ClienteGraphqlService } from '../../services/graphQL/cliente.graphql.service';
@@ -45,7 +40,6 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(
-    private clienteService: ClienteService,
     private clienteGraphql: ClienteGraphqlService,
     private dialog: MatDialog,
     private notificacionService: NotificationService,
@@ -53,6 +47,9 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    this.clienteGraphql.consultarPaises().subscribe((paises) => {
+      console.log(paises);
+    });
     this.consultarClientes();
 
     this.informacionClientes.filterPredicate = (
@@ -76,19 +73,14 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   }
 
   consultarClientes(): void {
-    this.loadingService.show();
-    this.clienteService
-      .consultarClientes()
-      .subscribe({
-        next: (response) => {
-          this.informacionClientes.data = response;
-          this.informacionClientes.paginator = this.paginator;
-        },
-        error: () => {
-          this.informacionClientes.data = [];
-        },
-      })
-      .add(() => this.loadingService.hide());
+    this.clienteGraphql.consultarClientes().subscribe({
+      next: (clientes: Cliente[]) => {
+        this.informacionClientes.data = clientes;
+      },
+      error: (error) => {
+        console.error('Error al consultar clientes:', error);
+      },
+    });
   }
 
   agregarCliente(): void {
@@ -139,7 +131,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     dialog.afterClosed().subscribe((res) => {
       if (res) {
         this.loadingService.show();
-        this.clienteService
+        this.clienteGraphql
           .eliminarCliente(clienteSeleccionado.cedula)
           .subscribe({
             next: () => {

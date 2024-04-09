@@ -8,7 +8,7 @@ import { ReporteRecetas } from '../../interfaces/reporte-recetas-por-mascota.int
 @Injectable({
   providedIn: 'root',
 })
-export class ReporteService {
+export class ReporteGraphqlService {
   constructor(private apollo: Apollo) {}
 
   consultarReporteClientes(
@@ -19,11 +19,14 @@ export class ReporteService {
         query: gql`
           query ConsultarReporteClientes($cedula_cliente: String!) {
             reporteClientes(cedula_cliente: $cedula_cliente) {
-              // Define aquí los campos que deseas obtener en el reporte
-              // Por ejemplo:
-              // idMascota
-              // nombreMascota
-              // ...
+              apellidos_cliente
+              cedula_cliente
+              nombres_cliente
+              mascotas {
+                dosis_receta
+                nombre_mascota
+                descripcion_receta
+              }
             }
           }
         `,
@@ -40,11 +43,15 @@ export class ReporteService {
         query: gql`
           query ConsultarReporteRecetas($id_mascota: Int!) {
             reporteRecetas(id_mascota: $id_mascota) {
-              // Define aquí los campos que deseas obtener en el reporte
-              // Por ejemplo:
-              // idReceta
-              // fecha
-              // ...
+              recetas {
+                medicamento
+                dosis_receta
+                descripcion_receta
+              }
+              edad_mascota
+              peso_mascota
+              raza_mascota
+              nombre_mascota
             }
           }
         `,

@@ -1,3 +1,4 @@
+import { MascotaGraphqlService } from './../../services/graphQL/mascota.graphql.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -5,7 +6,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogSimpleComponent } from '../../../shared/components/dialog-simple/dialog-simple.component';
 import { Cliente } from '../../interfaces/cliente.interface';
-import { DialogData } from '../../interfaces/dialog-data.interface';
 import { Mascota } from '../../interfaces/mascota.interfa';
 import { MascotaService } from '../../services/mascota.service';
 import { AgregarMascotaComponent } from '../../components/mascotas/agregar-mascota/agregar-mascota.component';
@@ -13,6 +13,7 @@ import { DialogDataMascota } from '../../interfaces/dialog-data-mascota.interfac
 import { ClienteService } from '../../services/cliente.service';
 import { NotificationService } from '../../services/notification.service';
 import { LoadingService } from '../../../shared/services/loading.service';
+import { ClienteGraphqlService } from '../../services/graphQL/cliente.graphql.service';
 
 @Component({
   selector: 'app-mascotas',
@@ -43,8 +44,8 @@ export class MascotasComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private mascotaService: MascotaService,
-    private clienteService: ClienteService,
+    private mascotaGraphqlService: MascotaGraphqlService,
+    private clienteGraphqlService: ClienteGraphqlService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService
   ) {}
@@ -72,7 +73,7 @@ export class MascotasComponent implements OnInit {
 
   consultarMascotas(): void {
     this.loadingService.show();
-    this.mascotaService
+    this.mascotaGraphqlService
       .consultarMascotas()
       .subscribe({
         next: (response) => {
@@ -136,7 +137,7 @@ export class MascotasComponent implements OnInit {
     dialog.afterClosed().subscribe((res) => {
       if (res) {
         this.loadingService.show();
-        this.mascotaService
+        this.mascotaGraphqlService
           .eliminarMascota(mascotaSeleccionada)
           .subscribe({
             next: () => {
@@ -163,7 +164,7 @@ export class MascotasComponent implements OnInit {
   }
 
   consultarClientes(): void {
-    this.clienteService.consultarClientes().subscribe({
+    this.clienteGraphqlService.consultarClientes().subscribe({
       next: (response) => {
         this.listadoClientes = response;
       },

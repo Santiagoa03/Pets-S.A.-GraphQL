@@ -1,5 +1,5 @@
+import { MascotaGraphqlService } from './../../services/graphQL/mascota.graphql.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RecetaService } from '../../services/receta.service';
 import { Receta } from '../../interfaces/receta.inteface';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,8 @@ import { Mascota } from '../../interfaces/mascota.interfa';
 import { Medicamento } from '../../interfaces/medicamento.inteface';
 import { NotificationService } from '../../services/notification.service';
 import { LoadingService } from '../../../shared/services/loading.service';
+import { RecetaGraphqlService } from '../../services/graphQL/receta.graphql.service';
+import { MedicamentoGraphqlService } from '../../services/graphQL/medicamento.graphql.service';
 
 @Component({
   selector: 'app-recetas',
@@ -39,9 +41,9 @@ export class RecetasComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private recetaService: RecetaService,
-    private medicamentoService: MedicamentoService,
-    private mascotaService: MascotaService,
+    private recetaGraphqlService: RecetaGraphqlService,
+    private medicamentoGraphqlService: MedicamentoGraphqlService,
+    private mascotaGraphqlService: MascotaGraphqlService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService
   ) {}
@@ -75,7 +77,7 @@ export class RecetasComponent implements OnInit {
 
   consultarRecetas(): void {
     this.loadingService.show();
-    this.recetaService
+    this.recetaGraphqlService
       .consultarRecetas()
       .subscribe({
         next: (response) => {
@@ -121,7 +123,7 @@ export class RecetasComponent implements OnInit {
     dialog.afterClosed().subscribe((res) => {
       if (res) {
         this.loadingService.show();
-        this.recetaService
+        this.recetaGraphqlService
           .eliminarReceta(recetaSeleccionada)
           .subscribe({
             next: () => {
@@ -148,7 +150,7 @@ export class RecetasComponent implements OnInit {
   }
 
   consultarMascotas(): void {
-    this.mascotaService.consultarMascotas().subscribe({
+    this.mascotaGraphqlService.consultarMascotas().subscribe({
       next: (response) => {
         this.listMascotas = response;
       },
@@ -157,7 +159,7 @@ export class RecetasComponent implements OnInit {
   }
 
   consultarMedicamentos(): void {
-    this.medicamentoService.consultarMedicamento().subscribe({
+    this.medicamentoGraphqlService.consultarMedicamento().subscribe({
       next: (response) => {
         this.listMedicamentos = response;
       },

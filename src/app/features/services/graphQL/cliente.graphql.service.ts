@@ -26,64 +26,73 @@ export class ClienteGraphqlService {
           }
         `,
       })
-      .pipe(
-        map((res) => res.data.clientes)
-      );
+      .pipe(map((res) => res.data.clientes));
+  }
+
+  consultarPaises(): Observable<any> {
+    return this.apollo
+      .query<any>({
+        query: gql`
+          query {
+            countries {
+              name
+            }
+          }
+        `,
+      })
+      .pipe(map((res) => res.data.countries));
   }
 
   guardarCliente(cliente: Cliente): Observable<any> {
-    return this.apollo
-      .mutate<any>({
-        mutation: gql`
-          mutation guardarCliente($input: ClienteInput!) {
-            guardarCliente(input: $input) {
-              cedula
-              nombres
-              apellidos
-              direccion
-              telefono
-              correo
-            }
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation guardarCliente($input: ClienteInput!) {
+          guardarCliente(input: $input) {
+            cedula
+            nombres
+            apellidos
+            direccion
+            telefono
+            correo
           }
-        `,
-        variables: {
-          input: cliente
         }
-      });
+      `,
+      variables: {
+        input: cliente,
+      },
+    });
   }
 
   editarCliente(cliente: Cliente): Observable<any> {
-    return this.apollo
-      .mutate<any>({
-        mutation: gql`
-          mutation editarCliente($input: ClienteInput!) {
-            editarCliente(input: $input) {
-              cedula
-              nombres
-              apellidos
-              direccion
-              telefono
-              correo
-            }
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation editarCliente($input: ClienteInput!) {
+          editarCliente(input: $input) {
+            cedula
+            nombres
+            apellidos
+            direccion
+            telefono
+            correo
           }
-        `,
-        variables: {
-          input: cliente
         }
-      });
+      `,
+      variables: {
+        input: cliente,
+      },
+    });
   }
 
   eliminarCliente(id: string): Observable<any> {
-    return this.apollo
-      .mutate<any>({
-        mutation: gql`
-          mutation eliminarCliente($id: String!) {
-            eliminarCliente(id: $id)
-          }
-        `,
-        variables: {
-          id: id
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation eliminarCliente($id: String!) {
+          eliminarCliente(id: $id)
         }
-      });
+      `,
+      variables: {
+        id: id,
+      },
+    });
   }
 }

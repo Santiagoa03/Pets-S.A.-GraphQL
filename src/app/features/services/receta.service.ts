@@ -1,34 +1,40 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { HttpApi } from './http-api';
-import { IRespuesta } from '../interfaces/respuesta-error.interface';
+import { Apollo, gql } from 'apollo-angular';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Receta } from '../interfaces/receta.inteface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecetaService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private apollo: Apollo) {}
 
   consultarRecetas(): Observable<Receta[]> {
-    return this.httpClient.get<Receta[]>(HttpApi.CONSULTAR_RECETAS).pipe(
-      map((res: any) => {
-        const data = JSON.parse(res.Message);
-        return data.map((item: any) => ({
-          id: item.id,
-          medicamento: {
-            dosis: item.dosis,
-            nombre: item.medicamento,
-            descripcion: item.descripcion,
-          },
-          mascota: {
-            nombre: item.nombre_mascota,
-            cedula_cliente: item.cedula_cliente,
-          },
-        }));
+    return this.apollo
+      .query<any>({
+        query: gql`
+          query {
+            recetas {
+              id
+              medicamento {
+                id
+                dosis
+                nombre
+                descripcion
+              }
+              mascota {
+                id_mascota
+                nombre
+                cedula_cliente
+              }
+            }
+          }
+        `,
       })
-    );
+      .pipe(
+        map((res) => res.data.recetas)
+      );
   }
 
   guardarReceta(receta: Receta): Observable<any> {
@@ -36,31 +42,33 @@ export class RecetaService {
       id_medicamento: Number(receta.medicamento.id),
       id_mascota: Number(receta.mascota.id_mascota),
     };
-    return this.httpClient.post<any>(HttpApi.GUARDAR_RECETA, data).pipe(
-      map((res) => {
-        this.validarMensajeError(res);
-        return res;
-      })
-    );
+
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation GuardarReceta($id_medicamento: Int!, $id_mascota: Int!) {
+          guardarReceta(id_medicamento: $id_medicamento, id_mascota: $id_mascota) {
+            // Define los campos que deseas devolver después de guardar la receta
+          }
+        }
+      `,
+      variables: data,
+    });
   }
 
   eliminarReceta(receta: Receta): Observable<any> {
     const data = {
       id_receta: receta.id,
     };
-    return this.httpClient.post<any>(HttpApi.ELIMINAR_RECETA, data).pipe(
-      map((res) => {
-        this.validarMensajeError(res);
-        return res;
-      })
-    );
-  }
 
-  validarMensajeError(res: unknown) {
-    const error = res as IRespuesta;
-    if (error.error) {
-      //this.utilService.mostrarMensaje(error.descripcionRespuesta, 'warning');
-      throw new Error(error.descripcionRespuesta);
-    }
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation EliminarReceta($id_receta: Int!) {
+          eliminarReceta(id_receta: $id_receta) {
+            // Define los campos que deseas devolver después de eliminar la receta
+          }
+        }
+      `,
+      variables: data,
+    });
   }
 }
