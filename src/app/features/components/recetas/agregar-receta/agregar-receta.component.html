@@ -1,0 +1,75 @@
+<mat-card>
+  <mat-card-header class="bg-blue-800 text-white rounded-t-lg">
+    <mat-card-title class="uppercase">{{ data.title }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="mt-4">
+    <div class="mt-8">
+      <mat-card-title>PET S.A.</mat-card-title>
+    </div>
+    <form [formGroup]="form" class="mt-4">
+      <div mat-dialog-content class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <mat-form-field>
+            <mat-label>Medicamento</mat-label>
+            <mat-select formControlName="medicamento">
+              <mat-option
+                *ngFor="let medicamento of data.medicamentos"
+                [value]="medicamento"
+              >
+                {{ medicamento.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                form.get('medicamento')?.invalid &&
+                form.get('medicamento')?.touched
+              "
+            >
+              {{ errorService.getErrorMessage(form, "medicamento") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Mascota</mat-label>
+            <mat-select formControlName="mascota">
+              <mat-option
+                *ngFor="let mascota of data.mascotas"
+                [value]="mascota"
+              >
+                {{ mascota.nombre }} -{{ mascota.id_mascota }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                form.get('mascota')?.invalid && form.get('mascota')?.touched
+              "
+            >
+              {{ errorService.getErrorMessage(form, "mascota") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div></div>
+      </div>
+      <mat-card-actions class="mat-dialog-actions">
+        <button
+          mat-raised-button
+          color="accent"
+          class="btn"
+          (click)="closepopup()"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="guardarReceta()"
+          mat-raised-button
+          color="accent"
+          class="btn"
+          *ngIf="!data.edit"
+        >
+          Agregar
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,23 @@
+<mat-toolbar class="mat-elevation-z8">
+  <button mat-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav opened mode="side" [style.width]="'250px'">
+    <shared-menu></shared-menu>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<div *ngIf="loadingService.isLoading()" class="overlay">
+  <mat-spinner
+    *ngIf="loadingService.isLoading()"
+    diameter="100"
+    color="primary"
+  ></mat-spinner>
+</div>

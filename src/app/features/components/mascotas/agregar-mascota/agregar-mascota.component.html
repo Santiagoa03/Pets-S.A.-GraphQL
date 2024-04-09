@@ -1,0 +1,107 @@
+<mat-card>
+  <mat-card-header class="bg-blue-800 text-white rounded-t-lg">
+    <mat-card-title class="uppercase">{{ data.title }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="mt-4">
+    <div class="mt-8">
+      <mat-card-title>PET S.A.</mat-card-title>
+    </div>
+    <form [formGroup]="form" class="mt-4">
+      <div mat-dialog-content class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <mat-form-field>
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" />
+            <mat-error
+              *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched"
+            >
+              {{ errorService.getErrorMessage(form, "nombre") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Edad</mat-label>
+            <input matInput formControlName="edad" />
+            <mat-error
+              *ngIf="form.get('edad')?.invalid && form.get('edad')?.touched"
+            >
+              {{ errorService.getErrorMessage(form, "edad") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Raza</mat-label>
+            <input matInput formControlName="raza" />
+            <mat-error
+              *ngIf="form.get('raza')?.invalid && form.get('raza')?.touched"
+            >
+              {{ errorService.getErrorMessage(form, "raza") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Peso</mat-label>
+            <input matInput formControlName="peso" />
+            <mat-error
+              *ngIf="form.get('peso')?.invalid && form.get('peso')?.touched"
+            >
+              {{ errorService.getErrorMessage(form, "peso") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Cliente</mat-label>
+            <mat-select formControlName="cliente">
+              <mat-option
+                *ngFor="let cliente of data.clientes"
+                [value]="cliente.cedula"
+              >
+                {{ cliente.nombres }} {{ cliente.apellidos }} -
+                {{ cliente.cedula }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                form.get('cliente')?.invalid && form.get('cliente')?.touched
+              "
+            >
+              {{ errorService.getErrorMessage(form, "cliente") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-card-actions class="mat-dialog-actions">
+        <button
+          mat-raised-button
+          color="accent"
+          class="btn"
+          (click)="closepopup()"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="guardarMascota()"
+          mat-raised-button
+          color="accent"
+          class="btn"
+          *ngIf="!data.edit"
+        >
+          Agregar
+        </button>
+        <button
+          (click)="editarMascota()"
+          mat-raised-button
+          color="accent"
+          class="btn"
+          *ngIf="data.edit"
+        >
+          Editar
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,86 @@
+<div class="p-10">
+  <mat-card class="rounded-lg shadow-md">
+    <mat-card-header class="header-1 bg-blue-800 text-white rounded-t-lg">
+      <mat-card-title class="uppercase">Gestionar Recetas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="mt-8">
+        <mat-card-title>Filtrar Recetas</mat-card-title>
+        <div class="m-4">
+          <div class="flex mt-8 space-x-3 container-form">
+            <div class="w-full">
+              <div class="w-full">
+                <mat-form-field class="w-full">
+                  <mat-label>Nombre Mascota</mat-label>
+                  <input matInput placeholder="Nombre Mascota" [(ngModel)]="filtroNombreMascota"
+                    (keyup)="aplicarFiltros()" class="w-full" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="w-full">
+              <mat-form-field class="w-full">
+                <mat-label>Nombre Medicamento</mat-label>
+                <input matInput placeholder="Nombre" [(ngModel)]="filtroDescripcion" (keyup)="aplicarFiltros()"
+                  class="w-full" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <mat-card class="mb-6 mt-7">
+        <mat-card-header class="bg-blue-800 text-white rounded-t-lg">
+          <mat-card-title class="uppercase">Recetas</mat-card-title>
+          <div class="spacer"></div>
+          <button mat-button color="primary" class="add-client-button" (click)="agregarReceta()">
+            Agregar Receta <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </mat-card-header>
+
+        <div class="overflow-x-auto">
+          <table mat-table class="border-collapse" [dataSource]="informacionRecetas" class="text-center">
+            <ng-container matColumnDef="id">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>Id</th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.id }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="medicamento">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Medicamentos
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.medicamento.nombre }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mascota">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Mascota
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.mascota.nombre }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Acciones
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                <button color="accent" mat-icon-button (click)="eliminarReceta(element)">
+                  <mat-icon matSuffix>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 15]" showFirstLastButtons></mat-paginator>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>

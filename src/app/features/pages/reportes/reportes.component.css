@@ -1,0 +1,11 @@
+.mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+}
+
+.container-form {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+}

@@ -1,0 +1,108 @@
+<div class="p-10">
+  <mat-card class="rounded-lg shadow-md">
+    <mat-card-header class="header-1 bg-blue-800 text-white rounded-t-lg">
+      <mat-card-title class="uppercase">Gestionar Mascotas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="mt-8">
+        <mat-card-title>Filtrar Mascota</mat-card-title>
+        <div class="m-4">
+          <div class="flex mt-8 space-x-4 container-form">
+            <div class="w-full">
+              <mat-form-field class="w-full">
+                <mat-label>Nombre Mascota</mat-label>
+                <input matInput placeholder="Nombre" [(ngModel)]="filtroDescripcion" (keyup)="aplicarFiltros()"
+                  class="w-full" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <mat-card class="mb-6 mt-7">
+        <mat-card-header class="bg-blue-800 text-white rounded-t-lg">
+          <mat-card-title class="uppercase">Mascotas</mat-card-title>
+          <div class="spacer"></div>
+          <button mat-button color="primary" class="add-client-button" (click)="agregarMascota()">
+            Agregar Mascota <mat-icon matSuffix>add</mat-icon>
+          </button>
+        </mat-card-header>
+
+        <div class="overflow-x-auto">
+          <table mat-table class="w-full border-collapse" [dataSource]="informacionMascotas">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef class="text-center">Id</th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.id_mascota }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Nombre
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.nombre }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="edad">
+              <th mat-header-cell *matHeaderCellDef class="text-center">
+                Edad
+              </th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                {{ element.edad }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="raza">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Raza
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.raza }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="peso">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Peso
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{ element.peso }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cliente">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Cliente
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                {{element.cedula_cliente.cedula}}-{{element.cedula_cliente.nombre}}
+                {{element.cedula_cliente.apellidos}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th class="text-center" mat-header-cell *matHeaderCellDef>
+                Acciones
+              </th>
+              <td class="text-center" mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary" (click)="editarMascota(element)">
+                  <mat-icon matSuffix>edit</mat-icon>
+                </button>
+
+                <button color="accent" mat-icon-button (click)="eliminarMascota(element)">
+                  <mat-icon matSuffix>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 15]" showFirstLastButtons></mat-paginator>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>

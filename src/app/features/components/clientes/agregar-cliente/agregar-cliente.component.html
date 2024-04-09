@@ -1,0 +1,115 @@
+<mat-card>
+  <mat-card-header class="bg-blue-800 text-white rounded-t-lg">
+    <mat-card-title class="uppercase">{{ data.title }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="mt-4">
+    <div class="mt-8">
+      <mat-card-title>PET S.A.</mat-card-title>
+    </div>
+    <form [formGroup]="form" class="mt-4">
+      <div mat-dialog-content class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <mat-form-field>
+            <mat-label>Cédula</mat-label>
+            <input formControlName="cedula" matInput />
+            <mat-error
+              *ngIf="form.get('cedula')?.invalid && form.get('cedula')?.touched"
+            >
+              {{ errorService.getErrorMessage(form, "cedula") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field>
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" />
+            <mat-error
+              *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched"
+            >
+              {{ errorService.getErrorMessage(form, "nombre") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="apellido" />
+            <mat-error
+              *ngIf="
+                form.get('apellido')?.invalid && form.get('apellido')?.touched
+              "
+            >
+              {{ errorService.getErrorMessage(form, "apellido") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="telefono" />
+            <mat-error
+              *ngIf="
+                form.get('telefono')?.invalid && form.get('telefono')?.touched
+              "
+            >
+              {{ errorService.getErrorMessage(form, "telefono") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Correo</mat-label>
+            <input matInput formControlName="correo" />
+            <mat-error
+              *ngIf="form.get('correo')?.invalid && form.get('correo')?.touched"
+            >
+              {{ errorService.getErrorMessage(form, "correo") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="direccion" />
+            <mat-error
+              *ngIf="
+                form.get('direccion')?.invalid && form.get('direccion')?.touched
+              "
+            >
+              {{ errorService.getErrorMessage(form,"direccion") }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-card-actions class="mat-dialog-actions">
+        <button
+          mat-raised-button
+          color="accent"
+          class="btn"
+          (click)="closepopup()"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="guardarCliente()"
+          mat-raised-button
+          color="accent"
+          class="btn"
+          *ngIf="!data.edit"
+        >
+          Agregar
+        </button>
+        <button
+          (click)="editarCliente()"
+          mat-raised-button
+          color="accent"
+          class="btn"
+          *ngIf="data.edit"
+        >
+          Editar
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card-content>
+</mat-card>

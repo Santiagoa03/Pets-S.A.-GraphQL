@@ -1,0 +1,14 @@
+<div class="sidenav-header">
+  <img width="150px" height="150px" src="assets/logo.jpg" alt="" />
+  <div class="header-text">
+    <br />
+    <h2>Pets S.A. Veterinaria</h2>
+  </div>
+</div>
+
+<mat-nav-list>
+  <a mat-list-item *ngFor="let item of menuItems" [href]="item.route">
+    <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+    <span matListItemTitle>{{ item.label }}</span>
+  </a>
+</mat-nav-list>

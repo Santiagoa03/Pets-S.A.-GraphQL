@@ -1,0 +1,22 @@
+{
+  "/clients": {
+    "target": "http://localhost:3030",
+    "secure": false
+  },
+  "/medicines": {
+    "target": "http://localhost:3030",
+    "secure": false
+  },
+  "/pets": {
+    "target": "http://localhost:3030",
+    "secure": false
+  },
+  "/recipes": {
+    "target": "http://localhost:3030",
+    "secure": false
+  },
+  "/reports": {
+    "target": "http://localhost:3030",
+    "secure": false
+  }
+}
