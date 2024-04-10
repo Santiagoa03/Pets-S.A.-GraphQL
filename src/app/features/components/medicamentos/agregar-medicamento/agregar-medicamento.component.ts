@@ -7,6 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ErrorService } from '../../../services/errores.service';
 import { NotificationService } from '../../../services/notification.service';
 import { LoadingService } from '../../../../shared/services/loading.service';
+import { MedicamentoGraphqlService } from '../../../services/graphQL/medicamento.graphql.service';
 
 @Component({
   selector: 'app-agregar-medicamento',
@@ -23,7 +24,7 @@ export class AgregarMedicamentoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogDataMedicamento,
     private ref: MatDialogRef<AgregarMedicamentoComponent>,
     private fb: FormBuilder,
-    private medicamentoService: MedicamentoService,
+    private medicamentoService: MedicamentoGraphqlService,
     public readonly errorService: ErrorService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService

@@ -3,6 +3,7 @@ import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Mascota } from '../../interfaces/mascota.interfa';
+import { Cliente } from '../../interfaces/cliente.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,51 +15,86 @@ export class MascotaGraphqlService {
     return this.apollo
       .query<any>({
         query: gql`
-          query {
-            mascotas {
-              id_mascota
+          query pets {
+            pets {
+              id
+              nombre
+              raza
               edad
               peso
-              raza
-              nombre
-              cedula_cliente {
-                correo
-                telefono
-                nombre
-                cedula
-                apellidos
-                direccion
-              }
+              cedula_cliente
+              nombre_cliente
+              apellidos_cliente
+              direccion_cliente
+              telefono_cliente
+              correo_cliente
             }
           }
         `,
       })
-      .pipe(map((res) => res.data.mascotas));
+      .pipe(
+        map((res) => {
+          const mascotasData = res.data.pets;
+          return mascotasData.map((mascotaData: any) =>
+            this.mapMascota(mascotaData)
+          );
+        })
+      );
   }
 
-  guardarMascota(mascota: Mascota): Observable<any> {
+  private mapMascota(data: any): Mascota {
+    const cliente: Cliente | string = {
+      cedula: data.cedula_cliente,
+      nombres: data.nombre_cliente,
+      apellidos: data.apellidos_cliente,
+      direccion: data.direccion_cliente,
+      telefono: data.telefono_cliente,
+      correo: data.correo_cliente,
+    };
+
+    return {
+      id_mascota: data.id,
+      nombre: data.nombre,
+      raza: data.raza,
+      edad: data.edad,
+      peso: data.peso,
+      cedula_cliente: cliente,
+    };
+  }
+
+  guardarMascota(petData: Mascota): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation guardarMascota($input: MascotaInput!) {
-          guardarMascota(input: $input) {
-            id_mascota
+        mutation createPet(
+          $nombre: String!
+          $raza: String!
+          $edad: Int!
+          $peso: Float!
+          $cedulaCliente: String!
+        ) {
+          createPet(
+            input: {
+              nombre: $nombre
+              raza: $raza
+              edad: $edad
+              peso: $peso
+              cedulaCliente: $cedulaCliente
+            }
+          ) {
+            nombre
+            raza
             edad
             peso
-            raza
-            nombre
-            cedula_cliente {
-              correo
-              telefono
-              nombre
-              cedula
-              apellidos
-              direccion
-            }
+            cedula_cliente
           }
         }
       `,
       variables: {
-        input: mascota,
+        nombre: petData.nombre,
+        raza: petData.raza,
+        edad: petData.edad,
+        peso: petData.peso,
+        cedulaCliente: petData.cedula_cliente,
       },
     });
   }
@@ -66,39 +102,53 @@ export class MascotaGraphqlService {
   editarMascota(mascota: Mascota): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation editarMascota($input: MascotaInput!) {
-          editarMascota(input: $input) {
-            id_mascota
+        mutation updatePet(
+          $id: Int!
+          $nombre: String!
+          $raza: String!
+          $edad: Int!
+          $peso: Float!
+          $cedulaCliente: String!
+        ) {
+          updatePet(
+            input: {
+              id: $id
+              nombre: $nombre
+              raza: $raza
+              edad: $edad
+              peso: $peso
+              cedulaCliente: $cedulaCliente
+            }
+          ) {
+            id
+            nombre
+            raza
             edad
             peso
-            raza
-            nombre
-            cedula_cliente {
-              correo
-              telefono
-              nombre
-              cedula
-              apellidos
-              direccion
-            }
+            cedula_cliente
           }
         }
       `,
       variables: {
-        input: mascota,
+        id: mascota.id_mascota,
+        nombre: mascota.nombre,
+        raza: mascota.raza,
+        edad: mascota.edad,
+        peso: mascota.peso,
+        cedulaCliente: mascota.cedula_cliente,
       },
     });
   }
 
-  eliminarMascota(mascota: Mascota): Observable<any> {
+  eliminarMascota(id: number): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation eliminarMascota($id: String!) {
-          eliminarMascota(id: $id)
+        mutation deletePet($id: Int!) {
+          deletePet(id: $id)
         }
       `,
       variables: {
-        id: mascota.id_mascota,
+        id: id,
       },
     });
   }

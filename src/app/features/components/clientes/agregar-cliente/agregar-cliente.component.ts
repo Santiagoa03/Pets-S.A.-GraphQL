@@ -7,6 +7,7 @@ import { DialogDataCliente } from '../../../interfaces/dialog-data-cliente.inter
 import { ErrorService } from '../../../services/errores.service';
 import { NotificationService } from '../../../services/notification.service';
 import { LoadingService } from '../../../../shared/services/loading.service';
+import { ClienteGraphqlService } from '../../../services/graphQL/cliente.graphql.service';
 
 @Component({
   selector: 'app-agregar-cliente',
@@ -23,7 +24,7 @@ export class AgregarClienteComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogDataCliente,
     private ref: MatDialogRef<AgregarClienteComponent>,
     private fb: FormBuilder,
-    private clienteService: ClienteService,
+    private clienteService: ClienteGraphqlService,
     public readonly errorService: ErrorService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService

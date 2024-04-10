@@ -3,6 +3,8 @@ import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Receta } from '../../interfaces/receta.inteface';
+import { Mascota } from '../../interfaces/mascota.interfa';
+import { Medicamento } from '../../interfaces/medicamento.inteface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,57 +16,80 @@ export class RecetaGraphqlService {
     return this.apollo
       .query<any>({
         query: gql`
-          query {
-            recetas {
+          query recipes {
+            recipe {
               id
-              medicamento {
-                id
-                dosis
-                nombre
-                descripcion
-              }
-              mascota {
-                id_mascota
-                nombre
-                cedula_cliente
-              }
+              medicamento
+              dosis
+              descripcion
+              nombre_mascota
+              cedula_cliente
             }
           }
         `,
       })
-      .pipe(map((res) => res.data.recetas));
+      .pipe(
+        map((res) => {
+          const recetasData = res.data.recipe;
+          return recetasData.map((recetaData: any) =>
+            this.mapReceta(recetaData)
+          );
+        })
+      );
   }
 
-  guardarReceta(receta: Receta): Observable<any> {
-    const data = {
-      id_medicamento: Number(receta.medicamento.id),
-      id_mascota: Number(receta.mascota.id_mascota),
+  private mapReceta(data: any): Receta {
+    const mascota: Mascota = {
+      id_mascota: 0,
+      nombre: data.nombre_mascota,
+      raza: '',
+      edad: 0,
+      peso: 0,
+      cedula_cliente: data.cedula_cliente,
     };
 
+    const medicamento: Medicamento = {
+      id: data.id,
+      nombre: data.medicamento,
+      dosis: data.dosis,
+      descripcion: data.descripcion,
+    };
+
+    return {
+      id: data.id,
+      medicamento: medicamento,
+      mascota: mascota,
+    };
+  }
+
+  guardarReceta(recipeData: Receta): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation GuardarReceta($id_medicamento: Int!, $id_mascota: Int!) {
-          guardarReceta(id_medicamento: $id_medicamento, id_mascota: $id_mascota) {
+        mutation createRecipe($idMedicamento: Int!, $idMascota: Int!) {
+          createRecipe(
+            input: { idMedicamento: $idMedicamento, idMascota: $idMascota }
+          ) {
+            id
           }
         }
       `,
-      variables: data,
+      variables: {
+        idMedicamento: recipeData.medicamento.id,
+        idMascota: recipeData.mascota.id_mascota,
+      },
     });
   }
 
-  eliminarReceta(receta: Receta): Observable<any> {
-    const data = {
-      id_receta: receta.id,
-    };
-
+  eliminarReceta(id: number): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation EliminarReceta($id_receta: Int!) {
-          eliminarReceta(id_receta: $id_receta) {
-          }
+        mutation deleteRecipe($id: Int!) {
+          deleteRecipe(id: $id)
         }
       `,
-      variables: data,
+      variables: {
+        id: id,
+      },
     });
   }
 }

@@ -11,54 +11,52 @@ import { ReporteRecetas } from '../../interfaces/reporte-recetas-por-mascota.int
 export class ReporteGraphqlService {
   constructor(private apollo: Apollo) {}
 
-  consultarReporteClientes(
-    cliente: string
-  ): Observable<ReporteMascotaPorCliente[]> {
+  generarClientReport(cedula: string): Observable<any> {
     return this.apollo
-      .query<any>({
-        query: gql`
-          query ConsultarReporteClientes($cedula_cliente: String!) {
-            reporteClientes(cedula_cliente: $cedula_cliente) {
+      .mutate<any>({
+        mutation: gql`
+          mutation generalClientReport($cedula: String!) {
+            generalClientReport(cedula: $cedula) {
+              nombres_cliente
               apellidos_cliente
               cedula_cliente
-              nombres_cliente
               mascotas {
-                dosis_receta
                 nombre_mascota
+                dosis_receta
                 descripcion_receta
               }
             }
           }
         `,
         variables: {
-          cedula_cliente: cliente,
+          cedula: cedula,
         },
       })
-      .pipe(map((res) => res.data.reporteClientes));
+      .pipe(map((res) => res.data.generalClientReport));
   }
 
   consultarReporteRecetas(idMascota: number): Observable<ReporteRecetas[]> {
     return this.apollo
-      .query<any>({
-        query: gql`
-          query ConsultarReporteRecetas($id_mascota: Int!) {
-            reporteRecetas(id_mascota: $id_mascota) {
+      .mutate<any>({
+        mutation: gql`
+          mutation recipesPetReport($idMascota: Int!) {
+            recipesPetReport(idMascota: $idMascota) {
+              nombre_mascota
+              raza_mascota
+              edad_mascota
+              peso_mascota
               recetas {
                 medicamento
                 dosis_receta
                 descripcion_receta
               }
-              edad_mascota
-              peso_mascota
-              raza_mascota
-              nombre_mascota
             }
           }
         `,
         variables: {
-          id_mascota: idMascota,
+          idMascota: idMascota,
         },
       })
-      .pipe(map((res) => res.data.reporteRecetas));
+      .pipe(map((res) => res.data.recipesPetReport));
   }
 }

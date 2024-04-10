@@ -44,7 +44,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private notificacionService: NotificationService,
     private loadingService: LoadingService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.consultarClientes();
@@ -70,12 +70,12 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   }
 
   consultarClientes(): void {
-
     this.clienteGraphql.consultarClientes().subscribe({
       next: (clientes: Cliente[]) => {
         this.informacionClientes.data = clientes;
       },
       error: (error) => {
+        this.informacionClientes.data = [];
         console.error('Error al consultar clientes:', error);
       },
     });

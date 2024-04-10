@@ -7,6 +7,7 @@ import { DialogDataMascota } from '../../../interfaces/dialog-data-mascota.inter
 import { ErrorService } from '../../../services/errores.service';
 import { NotificationService } from '../../../services/notification.service';
 import { LoadingService } from '../../../../shared/services/loading.service';
+import { MascotaGraphqlService } from '../../../services/graphQL/mascota.graphql.service';
 
 @Component({
   selector: 'app-agregar-mascota',
@@ -23,7 +24,7 @@ export class AgregarMascotaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogDataMascota,
     private ref: MatDialogRef<AgregarMascotaComponent>,
     private fb: FormBuilder,
-    private mascotaService: MascotaService,
+    private mascotaService: MascotaGraphqlService,
     public readonly errorService: ErrorService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService
@@ -57,13 +58,15 @@ export class AgregarMascotaComponent implements OnInit {
             ? this.data.data?.cedula_cliente
             : this.data.data?.cedula_cliente?.cedula
           : '',
-        Validators.required,
+        [Validators.required],
       ],
       peso: [
         this.data.edit ? this.data.data?.peso : '',
-        Validators.required,
-        Validators.maxLength(3),
-        Validators.pattern(/^([0-9])*$/),
+        [
+          Validators.required,
+          Validators.maxLength(3),
+          Validators.pattern(/^([0-9])*$/),
+        ],
       ],
     });
   }
@@ -117,7 +120,8 @@ export class AgregarMascotaComponent implements OnInit {
     this.mascotaService
       .editarMascota(mascotaEditada)
       .subscribe({
-        next: (response) => {
+        next: () => {
+          console.log('mascota editad');
           this.notificacionService.openSnackBar(
             'Mascota Editada Exitosamente ',
             'right',

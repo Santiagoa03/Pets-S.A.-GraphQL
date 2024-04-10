@@ -7,6 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ErrorService } from '../../../services/errores.service';
 import { NotificationService } from '../../../services/notification.service';
 import { LoadingService } from '../../../../shared/services/loading.service';
+import { RecetaGraphqlService } from '../../../services/graphQL/receta.graphql.service';
 
 @Component({
   selector: 'app-agregar-receta',
@@ -23,7 +24,7 @@ export class AgregarRecetaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogDataReceta,
     private ref: MatDialogRef<AgregarRecetaComponent>,
     private fb: FormBuilder,
-    private recetaService: RecetaService,
+    private recetaService: RecetaGraphqlService,
     public readonly errorService: ErrorService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService

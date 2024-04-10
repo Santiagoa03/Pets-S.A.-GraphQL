@@ -55,7 +55,7 @@ export class ReportesComponent implements OnInit {
   consultarClientes(): void {
     this.clienteGraphql.consultarClientes().subscribe({
       next: (response) => {
-        //this.listaClientes = response;
+        this.listaClientes = response;
       },
       error: (error) => {
         this.listaClientes = [];
@@ -98,17 +98,23 @@ export class ReportesComponent implements OnInit {
     this.loadingService.show();
     if (tipoReporte === 'CLIENTE') {
       this.reporteGraphqlService
-        .consultarReporteClientes(this.form.get('reporteCliente')?.value)
+        .generarClientReport(this.form.get('reporteCliente')?.value)
         .subscribe({
           next: (response) => {
-            const datosParaExcel = response[0].mascotas.map((mascota) => ({
-              apellidos_cliente: response[0].apellidos_cliente,
-              cedula_cliente: response[0].cedula_cliente,
-              nombres_cliente: response[0].nombres_cliente,
-              descripcion_receta: mascota.descripcion_receta,
-              dosis_receta: mascota.dosis_receta,
-              nombre_mascota: mascota.nombre_mascota,
-            }));
+            const datosParaExcel = response[0].mascotas.map(
+              (mascota: {
+                descripcion_receta: any;
+                dosis_receta: any;
+                nombre_mascota: any;
+              }) => ({
+                apellidos_cliente: response[0].apellidos_cliente,
+                cedula_cliente: response[0].cedula_cliente,
+                nombres_cliente: response[0].nombres_cliente,
+                descripcion_receta: mascota.descripcion_receta,
+                dosis_receta: mascota.dosis_receta,
+                nombre_mascota: mascota.nombre_mascota,
+              })
+            );
 
             this.excelSercice.exportToExcel(
               datosParaExcel,
@@ -131,7 +137,6 @@ export class ReportesComponent implements OnInit {
         .consultarReporteRecetas(Number(this.form.get('reporteMascota')?.value))
         .subscribe({
           next: (response) => {
-            console.log(response[0].recetas);
             const datosParaExcel = response[0].recetas.map((receta) => ({
               nombre_mascota: response[0].nombre_mascota,
               edad_mascota: response[0].edad_mascota,

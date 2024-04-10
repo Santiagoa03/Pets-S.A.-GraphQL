@@ -8,38 +8,46 @@ import { Medicamento } from '../../interfaces/medicamento.inteface';
   providedIn: 'root',
 })
 export class MedicamentoGraphqlService {
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo) {}
 
   consultarMedicamento(): Observable<Medicamento[]> {
     return this.apollo
       .query<any>({
         query: gql`
-        query medicines {
-          medicines {
-            nombre
-            descripcion
-            dosis
+          query medicines {
+            medicines {
+              nombre
+              descripcion
+              dosis
+              id
+            }
           }
-        }
         `,
       })
       .pipe(map((res) => res.data.medicines as Medicamento[]));
   }
 
-  guardarMedicamento(medicamento: Medicamento): Observable<any> {
+  guardarMedicamento(medicineData: Medicamento): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation guardarMedicamento($input: MedicamentoInput!) {
-          guardarMedicamento(input: $input) {
-            id
-            dosis
+        mutation createMedicine(
+          $nombre: String!
+          $descripcion: String!
+          $dosis: String!
+        ) {
+          createMedicine(
+            input: { nombre: $nombre, descripcion: $descripcion, dosis: $dosis }
+          ) {
             nombre
             descripcion
+            dosis
           }
         }
       `,
       variables: {
-        input: medicamento,
+        nombre: medicineData.nombre,
+        descripcion: medicineData.descripcion,
+        dosis: medicineData.dosis,
       },
     });
   }
@@ -47,35 +55,45 @@ export class MedicamentoGraphqlService {
   editarMedicamento(medicamento: Medicamento): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation editarMedicamento($input: MedicamentoInput!) {
-          editarMedicamento(input: $input) {
+        mutation updateMedicine(
+          $id: Int!
+          $nombre: String!
+          $descripcion: String!
+          $dosis: String!
+        ) {
+          updateMedicine(
+            input: {
+              id: $id
+              nombre: $nombre
+              descripcion: $descripcion
+              dosis: $dosis
+            }
+          ) {
             id
-            dosis
             nombre
             descripcion
+            dosis
           }
         }
       `,
       variables: {
-        input: {
-          id_medicamento: medicamento.id,
-          dosis: medicamento.dosis,
-          nombre: medicamento.nombre,
-          descripcion: medicamento.descripcion,
-        },
+        id: medicamento.id,
+        nombre: medicamento.nombre,
+        descripcion: medicamento.descripcion,
+        dosis: medicamento.dosis,
       },
     });
   }
 
-  eliminarMedicamento(medicamento: Medicamento): Observable<any> {
+  eliminarMedicamento(id: number): Observable<any> {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation eliminarMedicamento($id: ID!) {
-          eliminarMedicamento(id: $id)
+        mutation deleteMedicine($id: Int!) {
+          deleteMedicine(id: $id)
         }
       `,
       variables: {
-        id: medicamento.id,
+        id: id,
       },
     });
   }

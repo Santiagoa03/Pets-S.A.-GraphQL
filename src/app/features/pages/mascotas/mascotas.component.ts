@@ -1,5 +1,5 @@
 import { MascotaGraphqlService } from './../../services/graphQL/mascota.graphql.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -20,7 +20,7 @@ import { ClienteGraphqlService } from '../../services/graphQL/cliente.graphql.se
   templateUrl: './mascotas.component.html',
   styleUrl: './mascotas.component.css',
 })
-export class MascotasComponent implements OnInit {
+export class MascotasComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   form: FormGroup;
@@ -78,7 +78,6 @@ export class MascotasComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.informacionMascotas.data = response;
-          this.informacionMascotas.paginator = this.paginator;
         },
         error: () => {
           this.informacionMascotas.data = [];
@@ -120,6 +119,7 @@ export class MascotasComponent implements OnInit {
       data,
     });
     _popup.afterClosed().subscribe(() => {
+      console.log('Entra');
       this.consultarMascotas();
     });
   }
@@ -138,7 +138,7 @@ export class MascotasComponent implements OnInit {
       if (res) {
         this.loadingService.show();
         this.mascotaGraphqlService
-          .eliminarMascota(mascotaSeleccionada)
+          .eliminarMascota(mascotaSeleccionada?.id_mascota ?? 0)
           .subscribe({
             next: () => {
               this.notificacionService.openSnackBar(
@@ -166,7 +166,7 @@ export class MascotasComponent implements OnInit {
   consultarClientes(): void {
     this.clienteGraphqlService.consultarClientes().subscribe({
       next: (response) => {
-        //this.listadoClientes = response;
+        this.listadoClientes = response;
       },
       error: () => {},
     });

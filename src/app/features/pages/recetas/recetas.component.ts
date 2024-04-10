@@ -1,5 +1,5 @@
 import { MascotaGraphqlService } from './../../services/graphQL/mascota.graphql.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Receta } from '../../interfaces/receta.inteface';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,7 +23,7 @@ import { MedicamentoGraphqlService } from '../../services/graphQL/medicamento.gr
   templateUrl: './recetas.component.html',
   styleUrl: './recetas.component.css',
 })
-export class RecetasComponent implements OnInit {
+export class RecetasComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   form: FormGroup;
@@ -124,7 +124,7 @@ export class RecetasComponent implements OnInit {
       if (res) {
         this.loadingService.show();
         this.recetaGraphqlService
-          .eliminarReceta(recetaSeleccionada)
+          .eliminarReceta(recetaSeleccionada?.id ?? 0)
           .subscribe({
             next: () => {
               this.notificacionService.openSnackBar(

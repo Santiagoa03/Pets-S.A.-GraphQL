@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Medicamento } from '../../interfaces/medicamento.inteface';
 import { MedicamentoService } from '../../services/medicamento.service';
 import { FormGroup } from '@angular/forms';
@@ -18,7 +18,7 @@ import { MedicamentoGraphqlService } from '../../services/graphQL/medicamento.gr
   templateUrl: './medicamentos.component.html',
   styleUrl: './medicamentos.component.css',
 })
-export class MedicamentosComponent implements OnInit {
+export class MedicamentosComponent implements OnInit, AfterViewInit{
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   form: FormGroup;
@@ -29,19 +29,14 @@ export class MedicamentosComponent implements OnInit {
   informacionMedicamentos: MatTableDataSource<Medicamento> =
     new MatTableDataSource<Medicamento>();
 
-  displayedColumns: string[] = [
-    'nombre',
-    'dosis',
-    'descripcion',
-    'acciones',
-  ];
+  displayedColumns: string[] = ['nombre', 'dosis', 'descripcion', 'acciones'];
 
   constructor(
     private dialog: MatDialog,
     private medicamentoGraphqlService: MedicamentoGraphqlService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.consultarMedicamentos();
@@ -127,7 +122,7 @@ export class MedicamentosComponent implements OnInit {
       if (res) {
         this.loadingService.show();
         this.medicamentoGraphqlService
-          .eliminarMedicamento(medicamentoSeleccionado)
+          .eliminarMedicamento(medicamentoSeleccionado?.id ?? 0)
           .subscribe({
             next: () => {
               this.notificacionService.openSnackBar(
