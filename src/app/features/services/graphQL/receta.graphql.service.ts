@@ -27,6 +27,7 @@ export class RecetaGraphqlService {
             }
           }
         `,
+        fetchPolicy: 'network-only',
       })
       .pipe(
         map((res) => {

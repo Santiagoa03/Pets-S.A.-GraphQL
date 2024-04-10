@@ -23,6 +23,7 @@ export class MedicamentoGraphqlService {
             }
           }
         `,
+        fetchPolicy: 'network-only',
       })
       .pipe(map((res) => res.data.medicines as Medicamento[]));
   }

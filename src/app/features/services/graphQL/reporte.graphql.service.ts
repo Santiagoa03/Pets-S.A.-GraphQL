@@ -31,6 +31,7 @@ export class ReporteGraphqlService {
         variables: {
           cedula: cedula,
         },
+        fetchPolicy: 'network-only',
       })
       .pipe(map((res) => res.data.generalClientReport));
   }
@@ -56,6 +57,7 @@ export class ReporteGraphqlService {
         variables: {
           idMascota: idMascota,
         },
+        fetchPolicy: 'network-only',
       })
       .pipe(map((res) => res.data.recipesPetReport));
   }

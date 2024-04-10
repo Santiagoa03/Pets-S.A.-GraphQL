@@ -31,6 +31,7 @@ export class MascotaGraphqlService {
             }
           }
         `,
+        fetchPolicy: 'network-only',
       })
       .pipe(
         map((res) => {
