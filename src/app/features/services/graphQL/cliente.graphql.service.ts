@@ -1,46 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Cliente } from '../../interfaces/cliente.interface';
+import { AnonymousSubject } from 'rxjs/internal/Subject';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClienteGraphqlService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
   consultarClientes(): Observable<Cliente[]> {
     return this.apollo
       .query<any>({
         query: gql`
-          query {
-            clientes {
-              cedula
-              nombres
-              apellidos
-              direccion
-              telefono
-              correo
+            query clients {
+              clients {
+                cedula
+                nombres
+                apellidos
+                direccion
+                telefono
+                correo
+              }
             }
-          }
-        `,
+          `,
+        fetchPolicy: 'network-only',
       })
-      .pipe(map((res) => res.data.clientes));
-  }
-
-  consultarPaises(): Observable<any> {
-    return this.apollo
-      .query<any>({
-        query: gql`
-          query {
-            countries {
-              name
-            }
-          }
-        `,
-      })
-      .pipe(map((res) => res.data.countries));
+      .pipe(
+        map(result => result.data.clients as Cliente[]),
+        catchError((error) => {
+          console.error('Error al consultar clientes:', error);
+          return throwError('Error al consultar clientes. Por favor, inténtelo de nuevo más tarde.');
+        })
+      );
   }
 
   guardarCliente(cliente: Cliente): Observable<any> {

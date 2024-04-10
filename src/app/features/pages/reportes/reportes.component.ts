@@ -55,7 +55,7 @@ export class ReportesComponent implements OnInit {
   consultarClientes(): void {
     this.clienteGraphql.consultarClientes().subscribe({
       next: (response) => {
-        this.listaClientes = response;
+        //this.listaClientes = response;
       },
       error: (error) => {
         this.listaClientes = [];

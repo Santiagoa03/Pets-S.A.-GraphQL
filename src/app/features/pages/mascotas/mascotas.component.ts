@@ -166,7 +166,7 @@ export class MascotasComponent implements OnInit {
   consultarClientes(): void {
     this.clienteGraphqlService.consultarClientes().subscribe({
       next: (response) => {
-        this.listadoClientes = response;
+        //this.listadoClientes = response;
       },
       error: () => {},
     });

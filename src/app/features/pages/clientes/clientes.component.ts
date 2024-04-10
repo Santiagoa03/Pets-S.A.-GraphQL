@@ -44,12 +44,9 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private notificacionService: NotificationService,
     private loadingService: LoadingService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.clienteGraphql.consultarPaises().subscribe((paises) => {
-      console.log(paises);
-    });
     this.consultarClientes();
 
     this.informacionClientes.filterPredicate = (
@@ -73,6 +70,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   }
 
   consultarClientes(): void {
+
     this.clienteGraphql.consultarClientes().subscribe({
       next: (clientes: Cliente[]) => {
         this.informacionClientes.data = clientes;

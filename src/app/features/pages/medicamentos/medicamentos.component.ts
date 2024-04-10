@@ -30,7 +30,6 @@ export class MedicamentosComponent implements OnInit {
     new MatTableDataSource<Medicamento>();
 
   displayedColumns: string[] = [
-    'id',
     'nombre',
     'dosis',
     'descripcion',
@@ -42,7 +41,7 @@ export class MedicamentosComponent implements OnInit {
     private medicamentoGraphqlService: MedicamentoGraphqlService,
     private notificacionService: NotificationService,
     private loadingService: LoadingService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.consultarMedicamentos();

@@ -8,23 +8,22 @@ import { Medicamento } from '../../interfaces/medicamento.inteface';
   providedIn: 'root',
 })
 export class MedicamentoGraphqlService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
   consultarMedicamento(): Observable<Medicamento[]> {
     return this.apollo
       .query<any>({
         query: gql`
-          query {
-            medicamentos {
-              id
-              dosis
-              nombre
-              descripcion
-            }
+        query medicines {
+          medicines {
+            nombre
+            descripcion
+            dosis
           }
+        }
         `,
       })
-      .pipe(map((res) => res.data.medicamentos));
+      .pipe(map((res) => res.data.medicines as Medicamento[]));
   }
 
   guardarMedicamento(medicamento: Medicamento): Observable<any> {
